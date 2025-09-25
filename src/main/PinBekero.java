@@ -3,6 +3,11 @@ package main;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
@@ -14,7 +19,12 @@ public class PinBekero extends javax.swing.JFrame {
     
     public PinBekero() {
         initComponents();
+    }private void setPinButtonsColor(Color color) {
+    for (int i = 0; i < pin.length(); i++) {
+        int gomb = Integer.parseInt(pin.charAt(i) + "");
+        jPanel1.getComponent(gomb).setBackground(color);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -124,27 +134,32 @@ public class PinBekero extends javax.swing.JFrame {
                     if(kattDb == 4) {
                         chbMutat.setEnabled(true);
                         JOptionPane.showMessageDialog(rootPane, "Pin mentve!");
+                        jelszoMentes(pin);
                     }
                     
                 }
             });
         }
+    }
+        private void jelszoMentes(String pin) {
+            Path path = Paths.get("kod.txt"); // a fájl neve és elérési útja (itt a futtatási könyvtárban)
+            try {
+                Files.write(path, pin.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Hiba történt a PIN mentésekor: " + e.getMessage());
+            }
+        
     }//GEN-LAST:event_formWindowOpened
 
     private void chbMutatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbMutatActionPerformed
-        if(chbMutat.isSelected()){
-            for (int i = 0; i < pin.length(); i++) {
-                int gomb = Integer.parseInt(pin.charAt(i)+"");
-                jPanel1.getComponent(gomb).setBackground(Color.red);
-            }
-        }else{
-            chbMutat.setEnabled(false);
-            kattDb = 0;
-            for (int i = 0; i < pin.length(); i++) {
-                int gomb = Integer.parseInt(pin.charAt(i)+"");
-                jPanel1.getComponent(gomb).setBackground(Color.LIGHT_GRAY);
-            }
-        }
+       if(chbMutat.isSelected()){
+    setPinButtonsColor(Color.red);
+}else{
+    chbMutat.setEnabled(false);
+    kattDb = 0;
+    setPinButtonsColor(Color.LIGHT_GRAY);
+}
     }//GEN-LAST:event_chbMutatActionPerformed
 
     public static void main(String args[]) {
